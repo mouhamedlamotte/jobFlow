@@ -1,0 +1,50 @@
+model User {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    email    String  @unique
+    password String?
+    name     String?
+    image    String?
+    emailVerified  DateTime?
+
+    sessions Session[]
+
+    @@map("users")
+    Account Account[]
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    userId       String?  @map("user_id")
+    sessionToken String   @unique @map("session_token")
+    accessToken  String?  @map("access_token")
+    expires      DateTime
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @default(now()) @updatedAt
+
+    user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("sessions")
+}
+
+model Account {
+  id                String  @id @default(cuid()) @map("_id")
+  type              String
+  provider          String
+  providerAccountId String
+  token_type        String?
+  refresh_token     String?
+  access_token      String?
+  id_token          String?
+  scope             String?
+  session_state     String?
+  expires_at        Int?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String 
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
