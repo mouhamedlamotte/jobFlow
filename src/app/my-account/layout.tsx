@@ -16,7 +16,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider suppressHydrationWarning>
       <MyAccountSidebar />
 
       <SidebarInset>

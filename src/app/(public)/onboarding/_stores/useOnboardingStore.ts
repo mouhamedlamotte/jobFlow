@@ -35,11 +35,11 @@ interface OnboardingState {
   setCvFile: (file: File) => void
   setEmailConfig: (config: EmailConfig) => void
   setFinalPreferences: (prefs: FinalPreferences) => void
-  completeOnboarding: () => void
+  completeOnboarding: (personalInfo: PersonalInfo, cvFile: File, emailConfig: EmailConfig, finalPreferences: FinalPreferences) => void
 }
 
 export const useOnboardingStore = create<OnboardingState>((set) => ({
-  step: 4,
+  step: 1,
   name: "Personal Information",
   skipable: false,
   personalInfo: null,
@@ -56,9 +56,14 @@ export const useOnboardingStore = create<OnboardingState>((set) => ({
   setCvFile: (file) => set({ cvFile: file }),
   setEmailConfig: (config) => set({ emailConfig: config }),
   setFinalPreferences: (prefs) => set({ finalPreferences: prefs }),
-  completeOnboarding: () => {
+  completeOnboarding: (personalInfo, cvFile, emailConfig, finalPreferences) => {
     // Here you would typically send the collected data to your backend
     console.log("Onboarding completed")
+    console.log("Personal info:", personalInfo)
+    console.log("CV file:", cvFile)
+    console.log("Email config:", emailConfig)
+    console.log("Final preferences:", finalPreferences);
+    
     // Redirect to dashboard or show a success message
   },
 }))

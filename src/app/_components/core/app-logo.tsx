@@ -10,7 +10,7 @@ type Props = Omit<ComponentProps<typeof Link>, "href"> & {
   iconClassName?: string;
 };
 
-export const AppLogo = ({ className, iconClassName, ...props }: Props) => {
+export const AppLogo : React.FC<Props> = ({ className, iconClassName, ...props }: Props) => {
   return (
     <Link
       href="/"
@@ -26,7 +26,7 @@ export const AppLogo = ({ className, iconClassName, ...props }: Props) => {
       />
 
       <span className="font-bold">
-        Ready<small className="text-base font-bold">.js</small>
+        <small className="text-base font-bold">job</small>Flow
       </span>
     </Link>
   );

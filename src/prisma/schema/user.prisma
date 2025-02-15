@@ -9,10 +9,49 @@ model User {
     image    String?
     emailVerified  DateTime?
 
+    portfolio_link String?
+    onboarding_completed Boolean @default(false)
+
     sessions Session[]
 
     @@map("users")
     Account Account[]
+    UserLinks UserLinks[]
+    UserCV UserCV[]
+    EmailSettings EmailSettings?
+    UserPreferences UserPreferences?
+}
+
+enum UserLinksType {
+    GITHUB
+    LINKEDIN
+    TWITTER
+    INSTAGRAM
+    PORTFOLIO
+}
+
+model UserLinks {
+    id        String   @id @default(uuid())
+    name      UserLinksType
+    url       String
+    user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@unique([name, userId])
+    @@index([name])
+}
+
+model UserCV {
+    id        String   @id @default(uuid())
+    cv_filename      String
+    cv_url       String
+    user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+    primary  Boolean @default(false)
+    uploaded_at  DateTime @default(now())
+
+    @@unique([cv_filename, userId])
+    @@index([cv_filename])
 }
 
 model Session {
@@ -47,4 +86,43 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@map("account")
+}
+
+enum EmailProvider {
+  SMTP
+  RESEND
+}
+
+model EmailSettings {
+  id        String   @id @default(uuid())
+  user_id   String @unique
+  user      User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  provider     EmailProvider @default(RESEND)
+  smtp_server  String?
+  smtp_port    String?
+  smtp_email   String?
+  hased_smtp_password String?
+  hased_resend_api_key String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+}
+
+model Template {
+  id        String   @id @default(uuid())
+  name      String @unique
+  type      String
+
+  UserPreferences UserPreferences[]
+}
+
+model UserPreferences {
+  id        String   @id @default(uuid())
+  user_id   String @unique
+  user      User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  defaultTemplateId String
+  tepmlate  Template @relation(fields: [defaultTemplateId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  @@unique([user_id, defaultTemplateId])
 }

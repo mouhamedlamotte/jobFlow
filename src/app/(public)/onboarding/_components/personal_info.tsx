@@ -6,6 +6,7 @@ import { Button } from "@/app/_components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/_components/ui/form"
 import { Input } from "@/app/_components/ui/input"
 import { useOnboardingStore } from "../_stores/useOnboardingStore"
+import { useSearchParams } from "next/navigation"
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
@@ -15,6 +16,8 @@ const formSchema = z.object({
 })
 
 export const PersonalInfo = () => {
+  const searchParams = useSearchParams()
+  const email = searchParams.get("email")
   const { setStep, setPersonalInfo } = useOnboardingStore()
 
   const form = useForm<z.infer<typeof formSchema>>({

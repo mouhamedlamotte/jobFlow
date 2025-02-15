@@ -5,6 +5,7 @@ import prisma from "@/prisma";
 import { actionClient } from "@/server/safe-action";
 import { hash } from "bcryptjs";
 import { RegisterSchema } from "../_schemas/register";
+import { signIn } from "@/server/auth";
 
 export const register = actionClient
   .schema(RegisterSchema)
@@ -38,6 +39,18 @@ export const register = actionClient
           },
         });
       });
+
+      const res = await signIn("credentials", {
+        email: normalizedEmail,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        throw new Error("Registration failed. Please try again later");
+      }
+
+      console.log("Registration successful:", user);
 
       return { success: true };
     } catch (error: any) {

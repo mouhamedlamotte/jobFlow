@@ -25,7 +25,7 @@ const templates = [
 ]
 
 export const Finalisation = () => {
-  const { setFinalPreferences, completeOnboarding } = useOnboardingStore()
+  const { personalInfo, cvFile, emailConfig, setFinalPreferences, completeOnboarding } = useOnboardingStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,7 +37,7 @@ export const Finalisation = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setFinalPreferences(values)
-    completeOnboarding()
+    completeOnboarding(personalInfo!, cvFile!, emailConfig!, values)
   }
 
   return (

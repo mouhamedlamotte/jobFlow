@@ -36,7 +36,7 @@ export default function RegisterForm() {
     {
       actionProps: {
         onSuccess: () => {
-          router.replace("/signup?success=true");
+          router.replace(`/onboarding?email=${form.getValues().email}`);
         },
       },
       formProps: {
