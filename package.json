@@ -12,7 +12,8 @@
     "migrate:prod": "dotenv -e .env.local -- npx prisma migrate deploy",
     "migrate:createonly": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
     "db:seed": "dotenv -e .env.local -- npx prisma db seed",
-    "db:pull": "dotenv -e .env.local -- npx prisma db pull"
+    "db:pull": "dotenv -e .env.local -- npx prisma db pull",
+    "prepare": "husky"
   },
   "prisma": {
     "schema": "src/prisma/schema",
@@ -69,6 +70,7 @@
     "embla-carousel-react": "^8.3.0",
     "formidable": "^3.5.1",
     "framer-motion": "^11.3.28",
+    "husky": "^9.1.7",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.427.0",
     "motion": "^12.4.3",
