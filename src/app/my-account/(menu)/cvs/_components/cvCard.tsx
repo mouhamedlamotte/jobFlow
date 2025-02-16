@@ -70,7 +70,7 @@ const CvCard = ({cv}: {cv: UserCV}) => {
       })
 
       const getFileIcon = (filename: string) => {
-        const extension = filename.split(".").pop()?.toLowerCase()
+        const extension = filename?.split(".")?.pop()?.toLowerCase()
         switch (extension) {
           case "pdf":
             return <FaFilePdf size={24} />

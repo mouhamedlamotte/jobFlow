@@ -24,7 +24,7 @@ export const encrypt = (text: string) => {
 export const decrypt = (hash: string) => {
   try {
     const secretKey = Buffer.from(process.env.ENCRYPTION_KEY!, "base64");
-    const [iv, ciphertext, tag] = hash.split(":");
+    const [iv, ciphertext, tag] = hash?.split(":");
     if (!iv || !ciphertext || !tag) {
       throw new Error("Invalid hash format");
     }

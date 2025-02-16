@@ -12,7 +12,7 @@ import {
 
 export const DynamicBreadcrumb = () => {
   const pathname = usePathname();
-  const breadcrumbs = pathname.split("/").filter((crumb) => crumb !== "");
+  const breadcrumbs = pathname?.split("/")?.filter((crumb) => crumb !== "");
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -20,13 +20,13 @@ export const DynamicBreadcrumb = () => {
           <React.Fragment key={crumb}>
             <BreadcrumbItem>
               {index === breadcrumbs.length - 1 ? (
-                <BreadcrumbPage className="capitalize">{crumb.split("-").join(" ")}</BreadcrumbPage>
+                <BreadcrumbPage className="capitalize">{crumb?.split("-")?.join(" ")}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink
                     href={`/${breadcrumbs.slice(0, index + 1).join("/")}` as "/"}
                     className="hover:text-foreground cursor-pointer capitalize"
                 >
-                    {crumb.split("-").join(" ")}
+                    {crumb?.split("-")?.join(" ")}
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

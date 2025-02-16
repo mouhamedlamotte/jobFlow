@@ -50,10 +50,10 @@ export function getDomain() {
 
 export const getInitials = (name: string) => {
   return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase().at(0) || "";
+    ?.split(" ")
+    ?.map((n) => n[0])
+    ?.join("")
+    ?.toUpperCase().at(0) || "";
 };
 
 export const isProduction = process.env.NODE_ENV === "production";

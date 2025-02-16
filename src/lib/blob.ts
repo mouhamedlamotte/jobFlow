@@ -3,7 +3,7 @@
 import { put } from "@vercel/blob";
 
 export const uploadDataUrlFile = async (filename: string, dataUrl: string) => {
-  const base64Data = dataUrl.split(",")[1]; 
+  const base64Data = dataUrl?.split(",")[1]; 
   const binaryData = Buffer.from(base64Data, "base64"); 
 
   // Envoyer les données brutes
