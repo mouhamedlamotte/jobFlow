@@ -36,7 +36,7 @@ export default function RegisterForm() {
     {
       actionProps: {
         onSuccess: () => {
-          router.replace(`/onboarding?email=${form.getValues().email}`);
+          typeof window !== "undefined" && window.location.replace(`/onboarding?email=${form.getValues().email}`);
         },
       },
       formProps: {

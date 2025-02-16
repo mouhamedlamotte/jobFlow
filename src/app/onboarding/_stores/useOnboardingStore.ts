@@ -3,7 +3,7 @@ import { create } from "zustand"
 interface PersonalInfo {
   firstName: string
   lastName: string
-  email: string
+  email?: string
   phone?: string
 }
 
@@ -32,7 +32,7 @@ interface OnboardingState {
   finalPreferences: FinalPreferences | null
   setStep: (step: number) => void
   setPersonalInfo: (info: PersonalInfo) => void
-  setCvFile: (file: File) => void
+  setCvFile: (file: File | null) => void
   setEmailConfig: (config: EmailConfig) => void
   setFinalPreferences: (prefs: FinalPreferences) => void
   completeOnboarding: (personalInfo: PersonalInfo, cvFile: File, emailConfig: EmailConfig, finalPreferences: FinalPreferences) => void

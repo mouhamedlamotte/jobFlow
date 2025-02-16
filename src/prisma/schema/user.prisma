@@ -5,11 +5,15 @@ model User {
 
     email    String  @unique
     password String?
+    firstName String?
+    lastName String?
     name     String?
     image    String?
+    phone    String?
+    phoneVerified  Boolean @default(false)
     emailVerified  DateTime?
 
-    portfolio_link String?
+
     onboarding_completed Boolean @default(false)
 
     sessions Session[]

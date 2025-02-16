@@ -7,37 +7,55 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/app/_components/ui/input"
 import { useOnboardingStore } from "../_stores/useOnboardingStore"
 import { useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { PersonalInfoSchema } from "../_schemas/personal_info_schema"
+import { useAction } from "next-safe-action/hooks"
+import { updatePersonalInfo } from "../mutations/upadte_user_profile"
 
-const formSchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().optional(),
-})
 
 export const PersonalInfo = () => {
-  const searchParams = useSearchParams()
-  const email = searchParams.get("email")
   const { setStep, setPersonalInfo } = useOnboardingStore()
+  const { data:session} = useSession()
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof PersonalInfoSchema>>({
+    resolver: zodResolver(PersonalInfoSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "",
+      email: session?.user?.email ?? "",
       phone: "",
     },
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    setPersonalInfo(values)
-    setStep(2)
+  const { execute, status } = useAction(updatePersonalInfo, {
+    onSuccess: (data) => {
+      console.log("Personal info updated successfully:", data);
+      setPersonalInfo({
+        firstName: data.data?.firstName as string,
+        lastName: data.data?.lastName as string,
+        email: session?.user?.email as string,
+        phone: data.data?.phone as string
+      });
+      setStep(2);
+    },
+    onError: (error) => {
+      console.error("Failed to update personal info:", error);
+      alert("Failed to update personal info. Please try again.");
+    },
+  });
+  
+
+
+  const onSubmit = (values: z.infer<typeof PersonalInfoSchema>) => {
+    execute({
+      email: session?.user?.email as string,
+      ...values
+    });
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8">
         <FormField
           control={form.control}
           name="firstName"
@@ -65,13 +83,12 @@ export const PersonalInfo = () => {
           )}
         />
         <FormField
-          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="john.doe@example.com" {...field} />
+                <Input disabled type="email" value={session?.user?.email} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,7 +107,12 @@ export const PersonalInfo = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Next</Button>
+        <div className="flex justify-end">
+        <Button type="button"
+        disabled={form.formState.isLoading}
+        onClick={form.handleSubmit(onSubmit)}
+        >Suivant</Button>
+        </div>
       </form>
     </Form>
   )

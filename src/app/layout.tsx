@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider as NextAuthSessionProvider } from "next-auth/react";
 import { Dancing_Script, Outfit } from "next/font/google";
 import TRPCProvider from "./_providers/trpc-provider";
+import { SessionProvider } from "./_providers/session-provider";
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -27,9 +28,6 @@ export default async function RootLayout({
       <body className={cn(mainFont.className)} 
         suppressHydrationWarning
       >
-        <SessionProvider>
-          <TRPCProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
 
             <ThemeProvider
               attribute="class"
@@ -37,12 +35,17 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+        <NextAuthSessionProvider>
+        <SessionProvider>
+          <TRPCProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
               {children}
 
               <Toaster />
-            </ThemeProvider>
           </TRPCProvider>
         </SessionProvider>
+        </NextAuthSessionProvider>
+            </ThemeProvider>
       </body>
     </html>
   );
