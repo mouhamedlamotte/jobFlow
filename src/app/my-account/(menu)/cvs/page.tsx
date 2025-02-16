@@ -1,11 +1,9 @@
 import React from "react";
 import { CVManagement } from "../personal-details/_components/cv-management";
 import { redirect } from "next/navigation";
-import { getUserById } from "../../_queries/get-user-by-id";
 import { GetUserCv } from "../../_queries/get-users-cv";
 import { auth } from "@/server/auth";
 import { UserCV } from "@prisma/client";
-import { Button } from "@/app/_components/ui/button";
 import UploadCVButton from "./_components/upload_cv";
 
 const Mycvs = async () => {

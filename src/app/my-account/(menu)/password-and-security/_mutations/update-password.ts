@@ -31,7 +31,7 @@ export const updatePassword = authActionClient
           throw new InvalidCredentialsError();
         }
 
-        const hashedPassword = await hash(newPassword, PASSWORD_SALT_ROUNDS);
+        const hashedPassword = await hash(newPassword as unknown as string, PASSWORD_SALT_ROUNDS);
 
         const updatedUser = await prisma.user.update({
           where: { id: ctx.session.user.id },
