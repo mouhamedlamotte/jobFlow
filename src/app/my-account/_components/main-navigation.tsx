@@ -19,16 +19,23 @@ import {
 } from "@/app/_components/ui/sidebar";
 import Link from "next/link";
 import { mainNavigationItems } from "./navigation-items";
+import { usePathname } from "next/navigation";
 
 export const MainNavigation = () => {
+
+  const pathname = usePathname();
+
   return (
     <SidebarGroup>
       <SidebarMenu>
         {mainNavigationItems.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <Link href={item.url}>
+            <SidebarMenuItem >
+              <SidebarMenuButton asChild tooltip={item.title} size="lg" className="text-lg data-[active=true]:bg-primary/60"
+                isActive={pathname === item.url}
+
+              >
+                <Link href={item.url} className="text-lg">
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>

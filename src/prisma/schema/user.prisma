@@ -42,7 +42,7 @@ model UserLinks {
     userId    String
 
     @@unique([name, userId])
-    @@index([name])
+    @@unique([userId, name], name: "userId_name")
 }
 
 model UserCV {

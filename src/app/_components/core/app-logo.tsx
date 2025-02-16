@@ -17,15 +17,15 @@ export const AppLogo : React.FC<Props> = ({ className, iconClassName, ...props }
       className={cn("flex items-center text-2xl lg:text-3xl", className)}
       {...props}
     >
-      <Image
+      {/* <Image
         src={appLogo}
         alt={`${SITE_NAME} logo`}
         height={32}
         width={32}
         className="mr-1"
-      />
+      /> */}
 
-      <span className="font-bold">
+      <span className="font-bold flex items-center justify-center">
         <small className="text-base font-bold">job</small>Flow
       </span>
     </Link>

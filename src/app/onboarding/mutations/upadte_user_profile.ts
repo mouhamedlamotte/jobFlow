@@ -5,15 +5,19 @@ import { z } from "zod";
 import prisma from "@/prisma";
 import { revalidatePath } from "next/cache";
 import { PersonalInfoSchema } from "../_schemas/personal_info_schema";
+import { auth } from "@/server/auth";
 
 
 
 export const updatePersonalInfo = actionClient
   .schema(PersonalInfoSchema)
   .action(async ({ parsedInput: { firstName, lastName, email, phone } }) => {
+
+    const session = await auth();
+
     try {
       // Normalize the email
-      const normalizedEmail = email?.toLowerCase()?.trim() ?? "";
+      const normalizedEmail = session?.user?.email?.toLowerCase().trim();
 
       // Check if the user exists
       const user = await prisma.user.findUnique({

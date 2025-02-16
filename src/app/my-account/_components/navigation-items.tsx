@@ -1,34 +1,74 @@
 "use client";
 
 import { NavigationItem } from "@/types/navigation-item";
-import { LayoutDashboard, Shield, SquareUser } from "lucide-react";
+import { Bot, FileText, Folder, LayoutDashboard, Mailbox, Shield, SquareUser } from "lucide-react";
 
-export const mainNavigationItems: NavigationItem<string>[] = [
+export const mainNavigationItems : NavigationItem<string>[] = [
   {
-    title: "Dashboard",
+    title: "Tableau de bord",
     url: "/my-account",
     icon: LayoutDashboard,
     breadcrumbs: [{ label: "Dashboard", link: "/my-account" }],
   },
   {
-    title: "Personal Details",
+    title: "Mon profil",
     url: "/my-account/personal-details",
     icon: SquareUser,
     isActive: true,
     breadcrumbs: [
       { label: "Dashboard", link: "/my-account" },
-      { label: "Personal Details", link: "/my-account/personal-details" },
+      { label: "Mon profil", link: "/my-account/personal-details" },
     ],
   },
   {
-    title: "Password & Security",
+    title: "IA",
+    url: "/my-account/ai",
+    icon: Bot,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "IA", link: "/my-account/ai" },
+    ],
+  },
+  {
+    title: "Candidatures",
+    url: "/my-account/applications",
+    icon: Folder,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "Candidatures", link: "/my-account/applications" },
+    ],
+  },
+  {
+    title: "Modèles de lettres",
+    url: "/my-account/templates",
+    icon: FileText,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "Modèles de lettres", link: "/my-account/templates" },
+    ],
+  },
+  {
+    title: "Paramètres SMTP / Envoi",
+    url: "/my-account/email-settings",
+    icon: Mailbox,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "Paramètres SMTP / Envoi", link: "/my-account/email-settings" },
+    ],
+  },
+  {
+    title: "Mot de passe & Securité",
     url: "/my-account/password-and-security",
     icon: Shield,
     isActive: true,
     breadcrumbs: [
       { label: "Dashboard", link: "/my-account" },
       {
-        label: "Password & Security",
+        label: "Mot de passe & Securité",
         link: "/my-account/password-and-security",
       },
     ],

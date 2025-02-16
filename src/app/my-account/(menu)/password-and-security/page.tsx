@@ -1,9 +1,9 @@
 import { auth } from "@/server/auth";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getUserById } from "../_queries/get-user-by-id";
-import { UserForm } from "./_components/user-form";
-import { UserFormSkeleton } from "./_components/user-form-skeleton";
+import { getUserById } from "../../_queries/get-user-by-id";
+import { PasswordForm } from "./_components/password-form";
+import { PasswordFormSkeleton } from "./_components/password-form-skeleton";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -21,12 +21,12 @@ export default async function ProfilePage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-extrabold">Personal Details</h1>
+        <h1 className="text-3xl font-extrabold">Password & Security</h1>
       </div>
 
       <div className="border rounded-md p-4 max-w-screen-sm">
-        <Suspense fallback={<UserFormSkeleton />}>
-          <UserForm initialData={user} />
+        <Suspense fallback={<PasswordFormSkeleton />}>
+          <PasswordForm />
         </Suspense>
       </div>
     </div>

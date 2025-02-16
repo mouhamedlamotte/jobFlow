@@ -24,24 +24,22 @@ export const MyAccountSidebar = async ({
   const user = await getUserById(session?.user?.id);
 
   return (
-    <Sidebar variant="inset" {...props}>
-      <SidebarHeader>
+    <Sidebar variant="floating" {...props} className="w-72">
+      <SidebarHeader className="bg-background">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+          <SidebarMenuItem className="p-4 ">
                 <AppLogo />
-            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-background">
         <MainNavigation />
 
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild size="sm">
+                <SidebarMenuButton asChild size="lg">
                   <a href={`mailto:${SUPPORT_EMAIL}`}>
                     <LifeBuoy />
                     <span>Support</span>

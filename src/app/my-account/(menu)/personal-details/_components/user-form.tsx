@@ -19,7 +19,7 @@ import { useToast } from "@/app/_hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { AlertCircle } from "lucide-react";
-import { MyAccountGetUserById } from "../../_queries/get-user-by-id";
+import { MyAccountGetUserById } from "../../../_queries/get-user-by-id";
 import { updateUser } from "../_mutations/update-user";
 import { UpdateUserSchema } from "../_schemas/update-user";
 

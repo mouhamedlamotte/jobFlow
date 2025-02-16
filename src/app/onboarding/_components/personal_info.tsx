@@ -29,6 +29,8 @@ export const PersonalInfo = () => {
 
   const { execute, status } = useAction(updatePersonalInfo, {
     onSuccess: (data) => {
+      console.log("session", session);
+      
       console.log("Personal info updated successfully:", data);
       setPersonalInfo({
         firstName: data.data?.firstName as string,
@@ -47,6 +49,9 @@ export const PersonalInfo = () => {
 
 
   const onSubmit = (values: z.infer<typeof PersonalInfoSchema>) => {
+    if (!session?.user?.email) {
+      return;
+    }
     execute({
       email: session?.user?.email as string,
       ...values
