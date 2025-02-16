@@ -1,4 +1,3 @@
-import { DynamicBreadcrumbs } from "@/app/_components/core/dynamic-breadcrumbs";
 import { ProfileDropdown } from "@/app/_components/core/profile-dropdown";
 import { ThemeSwitcherDropdown } from "@/app/_components/core/theme-switcher-dropdown";
 import { Separator } from "@/app/_components/ui/separator";
@@ -8,7 +7,7 @@ import {
   SidebarTrigger,
 } from "@/app/_components/ui/sidebar";
 import { MyAccountSidebar } from "./_components/my-account-sidebar";
-import { navigationItems } from "./_components/navigation-items";
+import DynamicBreadcrumb from "../_components/core/dynamic-breadcrumbs";
 
 export default async function Layout({
   children,
@@ -25,7 +24,7 @@ export default async function Layout({
             <div className="flex items-center gap-2">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <DynamicBreadcrumbs navigationItems={navigationItems} />
+              <DynamicBreadcrumb />
             </div>
 
             <div className="space-x-2">

@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Avatar,
   AvatarFallback,
@@ -14,29 +12,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
+import { getUserById } from "@/app/my-account/_queries/get-user-by-id";
 import { getInitials } from "@/lib/utils";
+import { auth } from "@/server/auth";
 import { LogOut, Menu, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import SignOutButton from "./sign-out-button";
 
 type ProfileDropdownProps = {};
 
-export const ProfileDropdown = ({}: ProfileDropdownProps): JSX.Element => {
-  const { data: session } = useSession();
+export const ProfileDropdown = async ({}: ProfileDropdownProps) => {
 
-  if (!session?.user?.id) {
-    return (
-      <Button asChild>
-        <Link href="/signup">Sign up</Link>
-      </Button>
-    );
+  const session = await auth()
+
+
+  const existingUser = await getUserById(session?.user.id)
+
+  const user= {
+    id: existingUser?.id as string,
+    name: existingUser?.name as string,
+    email: existingUser?.email as string,
+    image: existingUser?.image as string
   }
 
-  const user = {
-    name: session.user.name || "Anonymous",
-    email: session.user.email,
-    image: session.user.image || "",
-  };
+
+
+
 
   return (
     <DropdownMenu>
@@ -45,7 +47,7 @@ export const ProfileDropdown = ({}: ProfileDropdownProps): JSX.Element => {
           <Menu className="h-5 w-5" />
 
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.image} alt={user.name} />
+            <AvatarImage src={user.image } alt={user.name} />
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
         </Button>
@@ -66,19 +68,13 @@ export const ProfileDropdown = ({}: ProfileDropdownProps): JSX.Element => {
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/my-account" className="flex items-center">
-            <User className="mr-2 h-4 w-4" />
-            <span>My Account</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
-          onSelect={() => signOut()}
+          // onSelect={() => signOut()}
           className="flex items-center text-red-600"
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign out</span>
+          <SignOutButton />
+          {/* <LogOut className="mr-2 h-4 w-4" />
+          <span>Sign out</span> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

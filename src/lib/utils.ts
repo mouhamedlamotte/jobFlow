@@ -53,7 +53,7 @@ export const getInitials = (name: string) => {
     .split(" ")
     .map((n) => n[0])
     .join("")
-    .toUpperCase();
+    .toUpperCase().at(0) || "";
 };
 
 export const isProduction = process.env.NODE_ENV === "production";

@@ -10,7 +10,7 @@ export type Breadcrumb<T extends string> = {
 export type NavigationItem<T extends string> = {
   title: string;
   url: Route<T> | URL;
-  icon?: ComponentType<LucideProps>;
+  icon?: ComponentType<LucideProps | any >;
   breadcrumbs?: Breadcrumb<T>[];
   isActive?: boolean;
   items?: {

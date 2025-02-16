@@ -21,7 +21,7 @@ export const uploadFile = actionClient
       const binaryData = Buffer.from(fileData, "base64");
 
       // Upload the file to Vercel Blob
-      const { url } = await put(`cvs/${fileName}-${userId}.pdf`, binaryData, {
+      const { url } = await put(`cvs/$${userId}-${fileName}`, binaryData, {
         access: "public",
       });
 

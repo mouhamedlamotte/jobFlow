@@ -2,6 +2,7 @@
 
 import { NavigationItem } from "@/types/navigation-item";
 import { Bot, FileText, Folder, LayoutDashboard, Mailbox, Shield, SquareUser } from "lucide-react";
+import { FaFilePdf } from "react-icons/fa";
 
 export const mainNavigationItems : NavigationItem<string>[] = [
   {
@@ -28,6 +29,16 @@ export const mainNavigationItems : NavigationItem<string>[] = [
     breadcrumbs: [
       { label: "Dashboard", link: "/my-account" },
       { label: "IA", link: "/my-account/ai" },
+    ],
+  },
+  {
+    title: "Mes CV",
+    url: "/my-account/cvs",
+    icon: FaFilePdf,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "Mes CV", link: "/my-account/cvs" },
     ],
   },
   {

@@ -14,7 +14,7 @@ import { useToast } from "@/app/_hooks/use-toast"
 
 export const PersonalInfoForm = ({initialData}: {initialData: MyAccountGetUserById }) => {
 
-  const {toast} = useToast()
+const {toast} = useToast()
 
 
   const { form, handleSubmitWithAction, action } = useHookFormAction(

@@ -1,5 +1,6 @@
 "use client";
-
+import { usePathname } from "next/navigation";
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,66 +9,33 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/app/_components/ui/breadcrumb";
-import {
-  Breadcrumb as BreadcrumbType,
-  NavigationItem,
-} from "@/types/navigation-item";
-import { usePathname } from "next/navigation";
 
-type DynamicBreadcrumbsProps<T extends string> = {
-  navigationItems: NavigationItem<T>[];
-};
-
-export const DynamicBreadcrumbs = <T extends string>({
-  navigationItems,
-}: DynamicBreadcrumbsProps<T>) => {
+export const DynamicBreadcrumb = () => {
   const pathname = usePathname();
-
-  const findBreadcrumbs = (
-    items: Pick<NavigationItem<T>, "breadcrumbs" | "items" | "title" | "url">[]
-  ): BreadcrumbType<T>[] => {
-    for (const item of items) {
-      if (item.url === pathname) {
-        return item.breadcrumbs || [];
-      }
-      if (item.items) {
-        const subItemBreadcrumbs = findBreadcrumbs(item.items);
-        if (subItemBreadcrumbs.length > 0) {
-          return subItemBreadcrumbs;
-        }
-      }
-    }
-    return [];
-  };
-
-  const breadcrumbs = findBreadcrumbs(navigationItems);
-
-  if (breadcrumbs.length === 0) {
-    return null;
-  }
-
+  const breadcrumbs = pathname.split("/").filter((crumb) => crumb !== "");
   return (
-    <Breadcrumb>
+    <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
-        {breadcrumbs.map((breadcrumb, index) => {
-          const isLast = index === breadcrumbs.length - 1;
-
-          return (
-            <BreadcrumbItem key={index}>
-              {index > 0 && <BreadcrumbSeparator />}
-              {isLast ? (
-                <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
-              ) : breadcrumb.link ? (
-                <BreadcrumbLink href={breadcrumb.link}>
-                  {breadcrumb.label}
-                </BreadcrumbLink>
+        {breadcrumbs.map((crumb, index) => (
+          <React.Fragment key={crumb}>
+            <BreadcrumbItem>
+              {index === breadcrumbs.length - 1 ? (
+                <BreadcrumbPage className="capitalize">{crumb.split("-").join(" ")}</BreadcrumbPage>
               ) : (
-                <BreadcrumbItem>{breadcrumb.label}</BreadcrumbItem>
+                <BreadcrumbLink
+                    href={`/${breadcrumbs.slice(0, index + 1).join("/")}` as "/"}
+                    className="hover:text-foreground cursor-pointer capitalize"
+                >
+                    {crumb.split("-").join(" ")}
+                </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-          );
-        })}
+            {index !== breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+          </React.Fragment>
+        ))}
       </BreadcrumbList>
     </Breadcrumb>
   );
 };
+
+export default DynamicBreadcrumb;
