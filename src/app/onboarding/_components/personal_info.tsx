@@ -1,62 +1,54 @@
 "use client"
-import { useForm } from "react-hook-form"
+
+
 import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
 import { Button } from "@/app/_components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/_components/ui/form"
 import { Input } from "@/app/_components/ui/input"
-import { useOnboardingStore } from "../_stores/useOnboardingStore"
-import { useSearchParams } from "next/navigation"
-import { useSession } from "next-auth/react"
-import { PersonalInfoSchema } from "../_schemas/personal_info_schema"
-import { useAction } from "next-safe-action/hooks"
-import { updatePersonalInfo } from "../mutations/upadte_user_profile"
+import { PersonalInfoSchema } from "@/app/onboarding/_schemas/personal_info_schema"
+import { updatePersonalInfo } from "@/app/onboarding/mutations/upadte_user_profile"
+import { MyAccountGetUserById } from "@/app/my-account/_queries/get-user-by-id"
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks"
+import { useToast } from "@/app/_hooks/use-toast"
 
 
-export const PersonalInfo = () => {
-  const { setStep, setPersonalInfo } = useOnboardingStore()
-  const { data:session} = useSession()
+export const PersonalInfoForm = ({initialData}: {initialData: MyAccountGetUserById }) => {
 
-  const form = useForm<z.infer<typeof PersonalInfoSchema>>({
-    resolver: zodResolver(PersonalInfoSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: session?.user?.email ?? "",
-      phone: "",
+  const {toast} = useToast()
+
+
+  const { form, handleSubmitWithAction, action } = useHookFormAction(
+    updatePersonalInfo,
+    zodResolver(PersonalInfoSchema),
+    {
+      actionProps: {
+        onSuccess: () => {
+          toast({
+            title: "Success!",
+            description: "Personal info updated successfully.",
+          });
+        },
+        onError: (error) => {
+          console.error("Failed to update personal info:", error);
+          toast({
+            title: "Error!",
+            variant: "destructive",
+            description: "Failed to update personal info. Please try again.",
+          })
+        },
+      },
+      formProps: {
+        defaultValues: {
+          firstName: initialData?.firstName as string,
+          lastName: initialData?.lastName as string,
+          email: initialData?.email ?? "",
+          phone: initialData?.phone as string
+        },
+        mode: "onChange",
+      },
+      errorMapProps: {},
     },
-  })
-
-  const { execute, status } = useAction(updatePersonalInfo, {
-    onSuccess: (data) => {
-      console.log("session", session);
-      
-      console.log("Personal info updated successfully:", data);
-      setPersonalInfo({
-        firstName: data.data?.firstName as string,
-        lastName: data.data?.lastName as string,
-        email: session?.user?.email as string,
-        phone: data.data?.phone as string
-      });
-      setStep(2);
-    },
-    onError: (error) => {
-      console.error("Failed to update personal info:", error);
-      alert("Failed to update personal info. Please try again.");
-    },
-  });
-  
-
-
-  const onSubmit = (values: z.infer<typeof PersonalInfoSchema>) => {
-    if (!session?.user?.email) {
-      return;
-    }
-    execute({
-      email: session?.user?.email as string,
-      ...values
-    });
-  }
+  )
 
   return (
     <Form {...form}>
@@ -66,7 +58,7 @@ export const PersonalInfo = () => {
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name</FormLabel>
+              <FormLabel>Prénom</FormLabel>
               <FormControl>
                 <Input placeholder="John" {...field} />
               </FormControl>
@@ -79,7 +71,7 @@ export const PersonalInfo = () => {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Last Name</FormLabel>
+              <FormLabel>Nom</FormLabel>
               <FormControl>
                 <Input placeholder="Doe" {...field} />
               </FormControl>
@@ -93,7 +85,7 @@ export const PersonalInfo = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input disabled type="email" value={session?.user?.email} />
+                <Input disabled type="email" value={initialData?.email} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -104,7 +96,7 @@ export const PersonalInfo = () => {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone Number (Optional)</FormLabel>
+              <FormLabel>Numéro de téléphone</FormLabel>
               <FormControl>
                 <Input type="tel" placeholder="+1234567890" {...field} />
               </FormControl>
@@ -114,9 +106,10 @@ export const PersonalInfo = () => {
         />
         <div className="flex justify-end">
         <Button type="button"
-        disabled={form.formState.isLoading}
-        onClick={form.handleSubmit(onSubmit)}
-        >Suivant</Button>
+        onClick={handleSubmitWithAction}
+        >
+ {action.isPending ? "Updating..." : "Update Profile"}
+        </Button>
         </div>
       </form>
     </Form>

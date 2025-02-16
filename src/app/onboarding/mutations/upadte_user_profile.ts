@@ -3,7 +3,7 @@
 import { actionClient } from "@/server/safe-action";
 import { z } from "zod";
 import prisma from "@/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { PersonalInfoSchema } from "../_schemas/personal_info_schema";
 import { auth } from "@/server/auth";
 
@@ -17,7 +17,7 @@ export const updatePersonalInfo = actionClient
 
     try {
       // Normalize the email
-      const normalizedEmail = session?.user?.email?.toLowerCase().trim();
+      const normalizedEmail = email?.toLowerCase().trim();
 
       // Check if the user exists
       const user = await prisma.user.findUnique({
@@ -40,13 +40,12 @@ export const updatePersonalInfo = actionClient
         },
       });
 
-      console.log("Personal info updated successfully:", updatedUser);
       
 
       // Revalidate any cached data if necessary
-      revalidatePath("/onboarding");
+      revalidateTag("myAccount.getUserById");
+      return { success: true, user: updatedUser };
 
-      return updatedUser;
     } catch (error: any) {
       console.error("Failed to update personal info:", error);
 

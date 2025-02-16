@@ -11,6 +11,12 @@ export const getUserById = unstable_cache(
         id: true,
         email: true,
         name: true,
+        image: true,
+        phone: true,
+        phoneVerified: true,
+        onboarding_completed: true,
+        firstName: true,
+        lastName: true,
       },
     });
   },

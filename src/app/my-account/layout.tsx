@@ -35,7 +35,7 @@ export default async function Layout({
           </div>
         </header>
 
-        <div className="p-4 pt-0">{children}</div>
+        <div className="px-10 pt-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

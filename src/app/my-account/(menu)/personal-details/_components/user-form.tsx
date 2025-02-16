@@ -1,118 +1,123 @@
-"use client";
+"use client"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Button } from "@/app/_components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/_components/ui/form"
+import { Input } from "@/app/_components/ui/input"
+import { useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useAction } from "next-safe-action/hooks"
+import { PersonalInfoSchema } from "@/app/onboarding/_schemas/personal_info_schema"
+import { updatePersonalInfo } from "@/app/onboarding/mutations/upadte_user_profile"
+import { User } from "@prisma/client"
+import { MyAccountGetUserById } from "@/app/my-account/_queries/get-user-by-id"
+import { filterObjectBySchema } from "@/lib/filter-zod-invalid.utils"
+import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks"
+import { useToast } from "@/app/_hooks/use-toast"
 
-import { ActionButton } from "@/app/_components/ui/action-button";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/app/_components/ui/alert";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/app/_components/ui/form";
-import { Input } from "@/app/_components/ui/input";
-import { useToast } from "@/app/_hooks/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
-import { AlertCircle } from "lucide-react";
-import { MyAccountGetUserById } from "../../../_queries/get-user-by-id";
-import { updateUser } from "../_mutations/update-user";
-import { UpdateUserSchema } from "../_schemas/update-user";
 
-interface UserFormProps {
-  initialData: MyAccountGetUserById;
-}
+export const PersonalInfoForm = ({initialData}: {initialData: MyAccountGetUserById }) => {
 
-export const UserForm = ({ initialData }: UserFormProps) => {
-  const { toast } = useToast();
+  const {toast} = useToast()
+
 
   const { form, handleSubmitWithAction, action } = useHookFormAction(
-    updateUser,
-    zodResolver(UpdateUserSchema),
+    updatePersonalInfo,
+    zodResolver(PersonalInfoSchema),
     {
       actionProps: {
         onSuccess: () => {
           toast({
             title: "Success!",
-            description: "Profile updated successfully.",
+            description: "Personal info updated successfully.",
           });
         },
-        onError: ({ error }) => {
+        onError: (error) => {
+          console.error("Failed to update personal info:", error);
           toast({
             title: "Error!",
             variant: "destructive",
-            description: "Failed to update profile.",
-          });
+            description: "Failed to update personal info. Please try again.",
+          })
         },
       },
       formProps: {
         defaultValues: {
-          id: initialData?.id || undefined,
-          email: initialData?.email || "",
-          name: initialData?.name || "",
+          firstName: initialData?.firstName as string,
+          lastName: initialData?.lastName as string,
+          email: initialData?.email ?? "",
+          phone: initialData?.phone as string
         },
         mode: "onChange",
       },
-    }
-  );
+      errorMapProps: {},
+    },
+  )
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmitWithAction} className="space-y-6">
-        {action.hasErrored && (
-          <Alert variant="destructive">
-            <AlertCircle className="w-4 h-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{action.result.serverError}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* User Email */}
+      <form className="space-y-8">
         <FormField
           control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Prénom</FormLabel>
+              <FormControl>
+                <Input placeholder="John" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nom</FormLabel>
+              <FormControl>
+                <Input placeholder="Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter user email" {...field} type="email" />
+                <Input disabled type="email" value={initialData?.email} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        {/* Name */}
         <FormField
           control={form.control}
-          name="name"
+          name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Numéro de téléphone</FormLabel>
               <FormControl>
-                <Input placeholder="Enter user name" {...field} />
+                <Input type="tel" placeholder="+1234567890" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        {/* Submit and Delete Buttons */}
-        <div className="flex flex-col space-y-4">
-          <ActionButton
-            type="submit"
-            className="w-full"
-            disabled={!form.formState.isValid}
-            pending={action.isPending}
-          >
-            {action.isPending ? "Updating..." : "Update Profile"}
-          </ActionButton>
+        <div className="flex justify-end">
+        <Button type="button"
+        onClick={handleSubmitWithAction}
+        >
+ {action.isPending ? "Updating..." : "Update Profile"}
+        </Button>
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
+
