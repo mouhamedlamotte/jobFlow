@@ -106,6 +106,7 @@ model EmailSettings {
   smtp_port    String?
   smtp_email   String?
   hased_smtp_password String?
+  resend_email String?
   hased_resend_api_key String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
