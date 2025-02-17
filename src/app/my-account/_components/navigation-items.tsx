@@ -6,12 +6,14 @@ import { FaFilePdf } from "react-icons/fa";
 
 export const mainNavigationItems : NavigationItem<string>[] = [
   {
+    disabled: true,
     title: "Tableau de bord",
     url: "/my-account",
     icon: LayoutDashboard,
     breadcrumbs: [{ label: "Dashboard", link: "/my-account" }],
   },
   {
+    disabled: true,
     title: "Mon profil",
     url: "/my-account/personal-details",
     icon: SquareUser,
@@ -22,6 +24,7 @@ export const mainNavigationItems : NavigationItem<string>[] = [
     ],
   },
   {
+    disabled: true,
     title: "IA",
     url: "/my-account/ai",
     icon: Bot,
@@ -42,6 +45,7 @@ export const mainNavigationItems : NavigationItem<string>[] = [
     ],
   },
   {
+    disabled: true,
     title: "Candidatures",
     url: "/my-account/applications",
     icon: Folder,
@@ -52,6 +56,7 @@ export const mainNavigationItems : NavigationItem<string>[] = [
     ],
   },
   {
+    disabled: true,
     title: "Modèles de lettres",
     url: "/my-account/templates",
     icon: FileText,

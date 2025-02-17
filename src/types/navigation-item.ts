@@ -13,6 +13,7 @@ export type NavigationItem<T extends string> = {
   icon?: ComponentType<LucideProps | any >;
   breadcrumbs?: Breadcrumb<T>[];
   isActive?: boolean;
+  disabled?: boolean
   items?: {
     title: string;
     url: Route<T> | URL;

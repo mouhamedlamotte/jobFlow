@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { mainNavigationItems } from "./navigation-items";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export const MainNavigation = () => {
 
@@ -31,11 +32,10 @@ export const MainNavigation = () => {
         {mainNavigationItems.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem >
-              <SidebarMenuButton asChild tooltip={item.title} size="lg" className="text-lg data-[active=true]:bg-primary/60"
+              <SidebarMenuButton asChild tooltip={item.title} size="lg" className={cn('text-lg data-[active=true]:bg-primary/60', item.disabled && 'cursor-not-allowed text-muted-foreground hover:text-muted-foreground hover:bg-transparent')}
                 isActive={pathname === item.url}
-
               >
-                <Link href={item.url} className="text-lg">
+                <Link href={item.disabled ? '#' : item.url} className="text-lg" >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
