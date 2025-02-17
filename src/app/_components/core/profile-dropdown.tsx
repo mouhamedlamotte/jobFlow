@@ -67,15 +67,10 @@ export const ProfileDropdown = async ({}: ProfileDropdownProps) => {
           </div>
         </DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          // onSelect={() => signOut()}
-          className="flex items-center text-red-600"
-        >
+        <DropdownMenuSeparator  />
+        <DropdownMenuLabel className="p-0">
           <SignOutButton />
-          {/* <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign out</span> */}
-        </DropdownMenuItem>
+        </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>
   );

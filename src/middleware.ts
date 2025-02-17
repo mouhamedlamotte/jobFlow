@@ -30,10 +30,10 @@ export default auth((req) => {
 
   const isAuthenticated = !!req.auth;
 
-  // Redirect authenticated users away from login and signup pages
-  if (isAuthenticated) {
-    return NextResponse.redirect(new URL(defaultRedirect, nextUrl));
-  }
+  // // Redirect authenticated users away from login and signup pages
+  // if (isAuthenticated && ) {
+  //   return NextResponse.redirect(new URL(defaultRedirect, nextUrl));
+  // }
 
   // Redirect unauthenticated users to the login page for private routes
   if (!isAuthenticated && !isPublicRoute(nextUrl.pathname)) {
