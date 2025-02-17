@@ -9,6 +9,7 @@ import { SessionProvider as NextAuthSessionProvider } from "next-auth/react";
 import { Dancing_Script, Outfit } from "next/font/google";
 import TRPCProvider from "./_providers/trpc-provider";
 import { SessionProvider } from "./_providers/session-provider";
+import { TooltipProvider } from "./_components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -24,28 +25,28 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth bg-background" suppressHydrationWarning>
-      <body className={cn(mainFont.className)} 
-        suppressHydrationWarning
-      >
-
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-        <NextAuthSessionProvider>
-        <SessionProvider>
-          <TRPCProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
-              {children}
-
-              <Toaster />
-          </TRPCProvider>
-        </SessionProvider>
-        </NextAuthSessionProvider>
-            </ThemeProvider>
+    <html
+      lang="en"
+      className="scroll-smooth bg-background"
+      suppressHydrationWarning
+    >
+      <body className={cn(mainFont.className)} suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextAuthSessionProvider>
+            <SessionProvider>
+              <TRPCProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+                <TooltipProvider>{children}</TooltipProvider>
+                <Toaster />
+              </TRPCProvider>
+            </SessionProvider>
+          </NextAuthSessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

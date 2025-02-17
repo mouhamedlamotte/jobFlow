@@ -70,20 +70,7 @@ export const mainNavigationItems : NavigationItem<string>[] = [
       { label: "Dashboard", link: "/my-account" },
       { label: "Paramètres SMTP / Envoi", link: "/my-account/email-settings/resend" },
     ],
-  },
-  {
-    title: "Mot de passe & Securité",
-    url: "/my-account/password-and-security",
-    icon: Shield,
-    isActive: true,
-    breadcrumbs: [
-      { label: "Dashboard", link: "/my-account" },
-      {
-        label: "Mot de passe & Securité",
-        link: "/my-account/password-and-security",
-      },
-    ],
-  },
+  }
 ];
 
 export const navigationItems = [...mainNavigationItems];

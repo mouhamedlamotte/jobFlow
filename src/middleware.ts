@@ -1,7 +1,7 @@
 import { authConfig } from "@/server/auth";
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { authRoutes, defaultRedirect, publicRoutes } from "./lib/routing";
+import {  defaultRedirect, publicRoutes } from "./lib/routing";
 
 const { auth } = NextAuth(authConfig);
 
@@ -23,9 +23,7 @@ const isPublicRoute = (pathname: string): boolean => {
 };
 
 // Helper function to check if a route is an authentication route
-const isAuthRoute = (pathname: string) => {
-  return authRoutes.some((authRoute) => pathname.startsWith(authRoute));
-};
+
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -33,13 +31,13 @@ export default auth((req) => {
   const isAuthenticated = !!req.auth;
 
   // Redirect authenticated users away from login and signup pages
-  if (isAuthenticated && isAuthRoute(nextUrl.pathname)) {
+  if (isAuthenticated) {
     return NextResponse.redirect(new URL(defaultRedirect, nextUrl));
   }
 
   // Redirect unauthenticated users to the login page for private routes
   if (!isAuthenticated && !isPublicRoute(nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/login", nextUrl));
+    return NextResponse.redirect(new URL("/", nextUrl));
   }
 
   // Continue to the requested page if no conditions were met

@@ -1,8 +1,20 @@
 "use client";
 
+import { GithubIcon } from "@/app/_components/icons/github-icon";
 import { GoogleIcon } from "@/app/_components/icons/google-icon";
 import { Button } from "@/app/_components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/_components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/app/_components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
 import { rootUrl } from "@/lib/routing";
 import { PageProps } from "@/types/page-props";
 import { Github } from "lucide-react";
@@ -11,44 +23,47 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
-    const callbackUrl = "http://localhost:3000/api/auth/callback/google";
-    const { status } = useSession();
-    const router = useRouter();
+  const callbackUrl = "http://localhost:3000/api/auth/callback/google";
+  const { status } = useSession();
+  const router = useRouter();
 
-    if (status === "authenticated"){
-        return (
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <Card className="w-full max-w-md shadow-2xl">
-                    <CardHeader className="text-center">
-                        <CardTitle className="text-3xl font-bold">JobFlow</CardTitle>
-                        <CardDescription>Vous êtes déjà connecté</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Button asChild className="w-full" variant="secondary">
-                            <Link href={{ pathname: "/my-account" }}>
-                                Accéder à votre compte
-                            </Link>
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        )
-    }
+  if (status === "authenticated") {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-2xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold">JobFlow</CardTitle>
+            <CardDescription>Vous êtes déjà connecté</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button asChild className="w-full" variant="secondary">
+              <Link href={{ pathname: "/my-account" }}>
+                Accéder à votre compte
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold">JobFlow</CardTitle>
           <CardDescription>Connetez vous pour continuer</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button asChild className="w-full" variant="secondary">
-            <Link href={{ pathname: "/login" }}>
-              Se connecter avec email
-            </Link>
-          </Button>
-          
+          <Tooltip>
+            <TooltipTrigger className="w-full">
+              <Button className="w-full" variant="secondary" disabled>
+                Se connecter avec email
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Pas disponible pour le moment</TooltipContent>
+          </Tooltip>
+
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -61,26 +76,38 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline">
-              <Github className="mr-2 h-4 w-4" />
+          <Tooltip>
+          <TooltipTrigger className="w-full">
+            <Button variant="outline" disabled className="w-full">
+              <GithubIcon/>
               GitHub
             </Button>
-            <Button variant="outline"
+            </TooltipTrigger>
+            <TooltipContent>Pas disponible pour le moment</TooltipContent>
+          </Tooltip>
+            <Button
+              variant="outline"
               onClick={() => {
                 signIn("google", { callbackUrl });
               }}
             >
-              <GoogleIcon/>
+              <GoogleIcon />
               Google
             </Button>
           </div>
           <p className="text-center text-sm text-muted-foreground">
             En continuant, vous acceptez nos{" "}
-            <Link href={{ pathname: "/terms" }} className="underline underline-offset-4 hover:text-primary">
+            <Link
+              href={{ pathname: "/terms" }}
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Conditions d&apos;utilisation
             </Link>{" "}
             et notre{" "}
-            <Link href={{ pathname: "/privacy" }} className="underline underline-offset-4 hover:text-primary">
+            <Link
+              href={{ pathname: "/privacy" }}
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Politique de confidentialité
             </Link>
             .

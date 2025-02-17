@@ -1,7 +1,5 @@
 export const rootUrl = "/";
-export const authRoutes = ["/login", "/signup"];
 export const publicRoutes = [
-  ...authRoutes,
   "/",
   "/about",
   "/404",
