@@ -21,17 +21,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
-import { useToast } from "@/app/_components/ui/use-toast";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { saveResendSettings, sendTestEmail } from "../_mutations/resend-seetting";
+import { saveResendSettings, sendResendTestEmail } from "../_mutations/resend-seetting";
+import { useToast } from "@/app/_hooks/use-toast";
+import { Loader } from "lucide-react";
 
 // Form schema
 const formSchema = z.object({
   resendApiKey: z.string().min(1, "API Key is required"),
-  fromEmail: z.string().email("Invalid email address"),
+  resendEmail: z.string().email("Invalid email address"),
 });
 
 const ResendForm = () => {
@@ -42,7 +43,7 @@ const ResendForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       resendApiKey: "",
-      fromEmail: "",
+      resendEmail: "",
     },
   });
 
@@ -51,14 +52,13 @@ const ResendForm = () => {
     actionProps: {
       onSuccess: () => {
         toast({
-          title: "Settings saved",
-          description: "Your Resend API settings have been saved successfully.",
+          description: "Vos paramètres Resend ont bien été sauvegardés.",
         });
       },
       onError: () => {
         toast({
-          title: "Error",
-          description: "Failed to save settings. Please try again.",
+          title: "Une erreur est survenue",
+          description: "Nous n'avons pas pu sauvegarder vos paramètres Resend. Veuillez réessayer.",
           variant: "destructive",
         });
       },
@@ -66,7 +66,7 @@ const ResendForm = () => {
   });
 
   // Send test email action
-  const { action: testEmailAction } = useHookFormAction(sendTestEmail, zodResolver(z.object({ testEmail: z.string().email() })), {
+  const { action: testEmailAction } = useHookFormAction(sendResendTestEmail, zodResolver(z.object({ testEmail: z.string().email() })), {
     actionProps: {
       onSuccess: () => {
         toast({
@@ -96,59 +96,32 @@ const ResendForm = () => {
               <FormItem>
                 <FormLabel>Resend API Key</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Enter your Resend API key" {...field} />
+                  <Input className="py-6  focus-visible:ring-0" type="password" placeholder="*************"  autoComplete="off" {...field} />
                 </FormControl>
-                <FormDescription>Your Resend API key will be securely stored.</FormDescription>
+                <FormDescription>Votre API key est stockée de manière sécurisée.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="fromEmail"
+            name="resendEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>From Email</FormLabel>
+                <FormLabel>Email Resend</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="noreply@yourdomain.com" {...field} />
+                  <Input className="py-6 focus-visible:ring-0" type="email" placeholder="noreply@yourdomain.com" {...field} />
                 </FormControl>
-                <FormDescription>The email address that will be used as the sender.</FormDescription>
+                <FormDescription>Cet email sera utilisé par Resend pour envoyer les emails</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={saveAction.status === "executing"}>
-            {saveAction.status === "executing" ? "Saving..." : "Save Settings"}
+          <Button variant="secondary" className="w-full" type="submit" disabled={saveAction.status === "executing"}>
+            {saveAction.status === "executing" ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : "Enregistrer"}
           </Button>
         </form>
       </Form>
-
-      <Dialog open={isTestModalOpen} onOpenChange={setIsTestModalOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline">Test Email</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Send Test Email</DialogTitle>
-            <DialogDescription>
-              Enter an email address to send a test email using your Resend settings.
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            type="email"
-            placeholder="test@example.com"
-            onChange={(e) => form.setValue("fromEmail", e.target.value)}
-          />
-          <DialogFooter>
-            <Button
-              onClick={() => testEmailAction.execute({ testEmail: form.getValues("fromEmail") })}
-              disabled={testEmailAction.status === "executing"}
-            >
-              {testEmailAction.status === "executing" ? "Sending..." : "Send Test Email"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

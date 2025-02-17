@@ -4,7 +4,7 @@ import { z } from "zod";
 import { actionClient } from "@/server/safe-action";
 import prisma from "@/prisma";
 import { auth } from "@/server/auth";
-import { encrypt, decrypt } from "@/lib/auth/crypto"; // Import your encryption utilities
+import { encrypt, decrypt } from "@/lib/auth/crypto";
 import nodemailer from 'nodemailer'
 
 // Schema for SMTP settings
@@ -24,10 +24,8 @@ export const saveSmtpSettings = actionClient
       throw new Error("Unauthorized");
     }
 
-    // Encrypt the SMTP password
     const encryptedPassword = encrypt(smtpPassword);
 
-    // Upsert SMTP settings in the database
     await prisma.emailSettings.upsert({
       where: { user_id: session.user.id },
       update: {
@@ -50,7 +48,6 @@ export const saveSmtpSettings = actionClient
     return { success: true };
   });
 
-// Send test email action for SMTP
 const sendTestEmailSchema = z.object({
   testEmail: z.string().email(),
 });
@@ -62,7 +59,6 @@ export const sendSmtpTestEmail = actionClient
       throw new Error("Unauthorized");
     }
 
-    // Fetch SMTP settings from the database
     const emailSettings = await prisma.emailSettings.findUnique({
       where: { user_id: session.user.id },
     });
@@ -79,34 +75,39 @@ export const sendSmtpTestEmail = actionClient
 
     // Decrypt the SMTP password
     const decryptedPassword = decrypt(emailSettings.hased_smtp_password);
-    console.log("Decrypted password:", decryptedPassword);
-    
 
-    // Configure nodemailer for STARTTLS
+
     const transporter = nodemailer.createTransport({
-      host: emailSettings.smtp_server, // smtp.gmail.com
-      port: parseInt(emailSettings.smtp_port), // 587
-      secure: false, // Use `false` for STARTTLS
+      pool: true,
+      maxConnections: 1,
+      maxMessages: 1,
+      rateDelta: 1000,
+      rateLimit: 1,
+      host: emailSettings.smtp_server,
+      port: parseInt(emailSettings.smtp_port),
+      secure: false,
       auth: {
-        user: emailSettings.smtp_email, // Your Gmail address
-        pass: decryptedPassword, // Your app-specific password
+        user: emailSettings.smtp_email,
+        pass: decryptedPassword,
       },
       tls: {
-        rejectUnauthorized: false, // Bypass SSL certificate validation (use with caution)
+        rejectUnauthorized: false,
       },
-    });
+    }
+  );
 
     try {
       await transporter.sendMail({
         from: emailSettings.smtp_email,
         to: testEmail,
-        subject: "Test Email from Your App",
-        text: "This is a test email sent from your app using SMTP.",
+        subject: "Ca marche !",
+        text: "Votre config smtp avec jobflow marche !",
       });
 
       return { success: true };
     } catch (error) {
-      console.error("Failed to send test email:", error);
-      throw new Error("Failed to send test email. Please check your SMTP settings.");
+      throw new Error("Failed to send test email. Please try again.");
+    } finally {
+      transporter.close();
     }
   });

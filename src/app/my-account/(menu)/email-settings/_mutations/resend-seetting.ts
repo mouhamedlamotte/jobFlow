@@ -10,33 +10,30 @@ import { Resend } from "resend";
 // Schema for Resend settings
 const resendSettingsSchema = z.object({
   resendApiKey: z.string().min(1),
-  fromEmail: z.string().email(),
+  resendEmail: z.string().email(),
 });
 
-// Save Resend settings action
 export const saveResendSettings = actionClient
   .schema(resendSettingsSchema)
-  .action(async ({ parsedInput: { resendApiKey, fromEmail } }) => {
+  .action(async ({ parsedInput: { resendApiKey, resendEmail } }) => {
     const session = await auth();
     if (!session?.user?.id) {
       throw new Error("Unauthorized");
     }
 
-    // Encrypt the Resend API key
     const encryptedApiKey = encrypt(resendApiKey);
 
-    // Upsert Resend settings in the database
     await prisma.emailSettings.upsert({
       where: { user_id: session.user.id },
       update: {
         provider: "RESEND",
-        resend_email: fromEmail,
+        resend_email: resendEmail,
         hased_resend_api_key: encryptedApiKey,
       },
       create: {
         user_id: session.user.id,
         provider: "RESEND",
-        resend_email: fromEmail,
+        resend_email: resendEmail,
         hased_resend_api_key: encryptedApiKey,
       },
     });
@@ -44,12 +41,11 @@ export const saveResendSettings = actionClient
     return { success: true };
   });
 
-// Send test email action
 const sendTestEmailSchema = z.object({
   testEmail: z.string().email(),
 });
 
-export const sendTestEmail = actionClient
+export const sendResendTestEmail = actionClient
   .schema(sendTestEmailSchema)
   .action(async ({ parsedInput: { testEmail } }) => {
     const session = await auth();
@@ -57,7 +53,6 @@ export const sendTestEmail = actionClient
       throw new Error("Unauthorized");
     }
 
-    // Fetch Resend settings from the database
     const emailSettings = await prisma.emailSettings.findUnique({
       where: { user_id: session.user.id },
     });
@@ -66,17 +61,13 @@ export const sendTestEmail = actionClient
       throw new Error("Email settings not found");
     }
 
-    // Decrypt the Resend API key
     const decryptedApiKey = decrypt(emailSettings.hased_resend_api_key);
-
-    // Send the test email using Resend
     const resend = new Resend(decryptedApiKey);
     await resend.emails.send({
       from: emailSettings.resend_email,
       to: testEmail,
-      subject: "Test Email from Your App",
-      html: "<p>This is a test email sent from your app using Resend.</p>",
+      subject: "Ca marche !",
+      text: "Votre config resend avec jobflow marche !",
     });
-
     return { success: true };
   });

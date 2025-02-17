@@ -41,7 +41,7 @@ export const SettingsNav = () => {
               href={link.href as "/"}
               className={cn(
                 "lex flex w-full items-center gap-4 rounded-md px-2.5 py-2 text-muted-foreground hover:text-foreground",
-                link.href === pathname && "bg-primary text-background",
+                link.href === pathname && "bg-muted-foreground text-background hover:text-background",
               )}
             >
               <link.icon className="h-5 w-5" />

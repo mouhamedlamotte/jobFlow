@@ -1,32 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/app/_components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/app/_components/ui/dialog";
+
 import { useToast } from "@/app/_components/ui/use-toast";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { saveSmtpSettings, sendSmtpTestEmail } from "../_mutations/stmp-setting";
+import { saveSmtpSettings } from "../_mutations/stmp-setting";
+import { Loader } from "lucide-react";
 
 // Form schema
 const formSchema = z.object({
@@ -37,7 +28,6 @@ const formSchema = z.object({
 });
 
 const SmtpForm = () => {
-  const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,25 +59,6 @@ const SmtpForm = () => {
     },
   });
 
-  // Send test email action
-  const { action: testEmailAction } = useHookFormAction(sendSmtpTestEmail, zodResolver(z.object({ testEmail: z.string().email() })), {
-    actionProps: {
-      onSuccess: () => {
-        toast({
-          title: "Test email sent",
-          description: "A test email has been sent to the provided address.",
-        });
-        setIsTestModalOpen(false);
-      },
-      onError: () => {
-        toast({
-          title: "Error",
-          description: "Failed to send test email. Please check your settings and try again.",
-          variant: "destructive",
-        });
-      },
-    },
-  });
 
   return (
     <div className="space-y-6">
@@ -145,38 +116,11 @@ const SmtpForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={saveAction.status === "executing"}>
-            {saveAction.status === "executing" ? "Saving..." : "Save Settings"}
+          <Button variant="secondary" className="w-full" type="submit" disabled={saveAction.status === "executing"}>
+            {saveAction.status === "executing" ? <Loader className="h-4 w-4 animate-spin" /> : "Enregistrer"}
           </Button>
         </form>
       </Form>
-
-      <Dialog open={isTestModalOpen} onOpenChange={setIsTestModalOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline">Test Email</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Send Test Email</DialogTitle>
-            <DialogDescription>
-              Enter an email address to send a test email using your SMTP settings.
-            </DialogDescription>
-          </DialogHeader>
-          <Input
-            type="email"
-            placeholder="test@example.com"
-            onChange={(e) => form.setValue("smtpEmail", e.target.value)}
-          />
-          <DialogFooter>
-            <Button
-              onClick={() => testEmailAction.execute({ testEmail: form.getValues("smtpEmail") })}
-              disabled={testEmailAction.status === "executing"}
-            >
-              {testEmailAction.status === "executing" ? "Sending..." : "Send Test Email"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
