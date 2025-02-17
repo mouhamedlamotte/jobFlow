@@ -24,6 +24,16 @@ export const mainNavigationItems : NavigationItem<string>[] = [
     ],
   },
   {
+    title: "Apply flow",
+    url: "/my-account/aplyflow",
+    icon: SquareUser,
+    isActive: true,
+    breadcrumbs: [
+      { label: "Dashboard", link: "/my-account" },
+      { label: "Apply flow", link: "/my-account/aplyflow" },
+    ],
+  },
+  {
     disabled: true,
     title: "IA",
     url: "/my-account/ai",

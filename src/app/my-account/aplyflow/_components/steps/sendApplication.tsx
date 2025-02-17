@@ -19,7 +19,7 @@ export function SendApplication() {
           <li>Email de candidature</li>
         </ul>
         <p className="text-gray-700">
-          Une fois que vous êtes satisfait, cliquez sur le bouton "Envoyer la candidature" ci-dessous.
+          Une fois que vous êtes satisfait, cliquez sur le bouton Envoyer la candidature ci-dessous.
         </p>
       </CardContent>
       <CardFooter>

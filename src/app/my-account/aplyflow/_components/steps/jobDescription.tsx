@@ -5,8 +5,8 @@ export function JobDescription({ onNext }: { onNext: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Description de l'offre</CardTitle>
-        <CardDescription>Voici les détails de l'offre d'emploi</CardDescription>
+        <CardTitle>Description de loffre</CardTitle>
+        <CardDescription>Voici les détails de loffre demploi</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-gray-700 mb-4">
@@ -15,12 +15,12 @@ export function JobDescription({ onNext }: { onNext: () => void }) {
         </p>
         <p className="text-gray-700 mb-4">
           Compétences requises : - Maîtrise de JavaScript, React, et Node.js - Expérience avec les bases de données SQL
-          et NoSQL - Connaissance des principes de l'architecture microservices - Familiarité avec les méthodologies
+          et NoSQL - Connaissance des principes de larchitecture microservices - Familiarité avec les méthodologies
           Agile
         </p>
       </CardContent>
       <CardFooter>
-        <Button onClick={onNext}>Passer à l'étape suivante</Button>
+        <Button onClick={onNext}>Passer à létape suivante</Button>
       </CardFooter>
     </Card>
   )

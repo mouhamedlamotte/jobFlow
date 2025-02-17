@@ -6,8 +6,8 @@ export function UserModification({ onNext }: { onNext: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Modification par l'utilisateur</CardTitle>
-        <CardDescription>Apportez vos modifications à la lettre et à l'email</CardDescription>
+        <CardTitle>Modification par lutilisateur</CardTitle>
+        <CardDescription>Apportez vos modifications à la lettre et à lemail</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -34,7 +34,7 @@ export function UserModification({ onNext }: { onNext: () => void }) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onNext}>Passer à l'étape suivante</Button>
+        <Button onClick={onNext}>Passer à létape suivante</Button>
       </CardFooter>
     </Card>
   )

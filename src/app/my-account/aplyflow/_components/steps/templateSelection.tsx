@@ -28,7 +28,7 @@ export function TemplateSelection({ onNext }: { onNext: () => void }) {
         </RadioGroup>
       </CardContent>
       <CardFooter>
-        <Button onClick={onNext}>Passer à l'étape suivante</Button>
+        <Button onClick={onNext}>Passer à létape suivante</Button>
       </CardFooter>
     </Card>
   )
