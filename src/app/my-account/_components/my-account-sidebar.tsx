@@ -16,12 +16,11 @@ import Link from "next/link";
 import * as React from "react";
 import { getUserById } from "../_queries/get-user-by-id";
 import { MainNavigation } from "./main-navigation";
+import SignOutButton from "@/app/_components/core/sign-out-button";
 
 export const MyAccountSidebar = async ({
   ...props
 }: React.ComponentProps<typeof Sidebar>) => {
-  const session = await auth();
-  const user = await getUserById(session?.user?.id);
 
   return (
     <Sidebar variant="floating" {...props} className="w-72">
@@ -39,19 +38,8 @@ export const MyAccountSidebar = async ({
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild size="lg">
-                  <a href={`mailto:${SUPPORT_EMAIL}`}>
-                    <LifeBuoy />
-                    <span>Support</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
                 <SidebarMenuButton asChild size="sm">
-                  <a href={`mailto:${CONTACT_EMAIL}`}>
-                    <Send />
-                    <span>Feedback</span>
-                  </a>
+                    <SignOutButton />
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
