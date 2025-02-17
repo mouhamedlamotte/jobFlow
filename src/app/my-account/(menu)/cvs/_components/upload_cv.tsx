@@ -18,6 +18,7 @@ import { addUserCV } from "../../personal-details/_mutations/update_user_cv"
 import { CVManagementSchema } from "../_schemas/cv-management-shema"
 import { useCvStore } from "../stores/useCvStore"
 import { useSession } from "next-auth/react"
+import { Loader } from "lucide-react"
 
 const UploadCVButton = ({disabled }: { disabled: boolean}) => {
   const {cvs, setCVs} = useCvStore()
@@ -73,9 +74,9 @@ const UploadCVButton = ({disabled }: { disabled: boolean}) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Upload New CV</DialogTitle>
+          <DialogTitle>Ajouter un CV</DialogTitle>
           <DialogDescription>
-            Upload a new CV file. Supported formats are PDF, DOC, and DOCX.
+            Veuillez choisir un fichier PDF, DOC, ou DOCX.
           </DialogDescription>
         </DialogHeader>
         <div className="w-full mx-auto min-h-48 border border-dashed rounded-lg">
@@ -83,10 +84,10 @@ const UploadCVButton = ({disabled }: { disabled: boolean}) => {
         </div>
         <DialogFooter>
           <Button onClick={() => setIsDialogOpen(false)} variant="outline">
-            Cancel
+            Annuler
           </Button>
           <Button onClick={handleUpload} disabled={!file || addAction.status === "executing"}>
-            {addAction.status === "executing" ? "Uploading..." : "Upload"}
+            {addAction.status === "executing" ?<Loader className="animate-spin" /> : "Charger"}
           </Button>
         </DialogFooter>
       </DialogContent>

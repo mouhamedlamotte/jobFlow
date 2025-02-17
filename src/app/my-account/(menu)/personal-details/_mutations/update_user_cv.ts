@@ -21,8 +21,6 @@ export const addUserCV = actionClient
     throw new Error("Unauthorized")
   }
 
-  console.log("AddCV triggered", formData);
-  
 
   try {
     const file = formData.clientInput.get("file") as File
@@ -49,14 +47,13 @@ export const addUserCV = actionClient
       data: {
         cv_filename: file.name,
         cv_url,
-        userId: session.user.id,
+        userId: formData.clientInput.get("userId") as string,
       },
     })
     revalidateTag("myAccount.getUserCv");
     return { success: true, cv: newCV }
   } catch (error) {
-    console.error("Failed to add user CV:", error)
-    throw new Error("Failed to add user CV. Please try again.")
+    throw new Error("Une erreur est survenue lors de l'ajout du CV.")
   }
 })
 
@@ -80,8 +77,7 @@ export const removeUserCV = actionClient.schema(RemoveUserCVSchema).action(async
     revalidateTag("myAccount.getUserCv");
     return { success: true, id }
   } catch (error) {
-    console.error("Failed to remove user CV:", error)
-    throw new Error("Failed to remove user CV. Please try again.")
+    throw new Error("Une erreur est survenue lors de la suppression du CV.")
   }
 })
 
@@ -112,8 +108,7 @@ export const setUserCVPrimary = actionClient.schema(SetUserCVPrimarySchema).acti
     revalidateTag("myAccount.getUserCv")
     return { success: true, id }
   } catch (error) {
-    console.error("Failed to set primary user CV:", error)
-    throw new Error("Failed to set primary user CV. Please try again.")
+    throw new Error("une erreur est survenue lors de la mise à jour du CV.")
   }
 })
 
