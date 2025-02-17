@@ -105,7 +105,7 @@ const ResendForm = ({initialValues} : {initialValues : z.infer<typeof formSchema
                   {
                     initialValues?.resendApiKey && (
                   <Button className="" type="button" variant="ghost" onClick={toggleApiKeyEdit}>
-                    {isEditingApiKey ? "Cancel" : <Edit />}
+                    {isEditingApiKey ? "Annuler" : <Edit />}
                   </Button>
                     )
                   }

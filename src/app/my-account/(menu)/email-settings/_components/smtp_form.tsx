@@ -151,14 +151,18 @@ const SmtpForm = ({
                       </div>
                     )}
                   </FormControl>
-                  <Button
-                    className=""
-                    type="button"
-                    variant="ghost"
-                    onClick={togglePasswordEdit}
-                  >
-                    {isEditingPassword ? "Cancel" : <Edit />}
-                  </Button>
+                  {
+                    initialValues?.smtpPassword && (
+                      <Button
+                        className=""
+                        type="button"
+                        variant="ghost"
+                        onClick={togglePasswordEdit}
+                      >
+                        {isEditingPassword ? "Annuler" : <Edit />}
+                      </Button>
+                    )
+                  }
                 </div>
                 <FormMessage />
               </FormItem>

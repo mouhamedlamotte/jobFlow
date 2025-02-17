@@ -25,26 +25,25 @@ const CvCard = ({cv}: {cv: UserCV}) => {
     const { toast } = useToast()
   const {cvs, setCVs} = useCvStore()
 
-    
+
       const { action: removeAction } = useHookFormAction(removeUserCV, zodResolver(CVManagementSchema), {
         actionProps: {
           onSuccess: (data) => {
             setCVs(cvs.filter((cv) => cv.id !== data.data?.id))
             toast({
-              title: "Success!",
-              description: "CV removed successfully.",
+              description: "CV supprimé avec succès.",
             })
           },
           onError: (error) => {
             toast({
-              title: "Error!",
+              title: "Une erreur est survenue!",
               variant: "destructive",
-              description: "Failed to remove CV. Please try again.",
+              description: error?.error.serverError ?? "Votre CV n'a pas pu être supprimé. Veuillez réessayer.",
             })
           },
         },
       })
-    
+
       const { action: setPrimaryAction } = useHookFormAction(setUserCVPrimary, zodResolver(CVManagementSchema), {
         actionProps: {
           onSuccess: (data) => {
@@ -55,15 +54,14 @@ const CvCard = ({cv}: {cv: UserCV}) => {
               })),
             )
             toast({
-              title: "Success!",
-              description: "Primary CV set successfully.",
+              description: `${cv.cv_filename} est désormais votre CV par défaut`,
             })
           },
           onError: (error) => {
             toast({
-              title: "Error!",
+              title: "Une erreur est survenue!",
               variant: "destructive",
-              description: "Failed to set primary CV. Please try again.",
+              description: error?.error.serverError ?? "Votre CV n'a pas pu être modifié. Veuillez réessayer.",
             })
           },
         },
@@ -100,14 +98,13 @@ const CvCard = ({cv}: {cv: UserCV}) => {
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
-            Set as Primary
+            par defaut
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Set as Primary CV</DialogTitle>
             <DialogDescription>
-              Are you sure you want to set this CV as your primary CV?
+             Etes vous sur de vouloir définir ce CV comme votre CV par défaut?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -115,7 +112,7 @@ const CvCard = ({cv}: {cv: UserCV}) => {
               variant="outline"
               onClick={() => setPrimaryAction.execute({ id: cv.id })}
             >
-              Confirm
+              Confirmer
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -124,15 +121,13 @@ const CvCard = ({cv}: {cv: UserCV}) => {
       <Dialog>
         <DialogTrigger asChild className="ml-auto">
           <Button variant="destructive" size="sm">
-            Remove
+            Supprimer
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove CV</DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove this CV? This action cannot be
-              undone.
+              Etes vous sur de vouloir supprimer ce CV?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -140,7 +135,7 @@ const CvCard = ({cv}: {cv: UserCV}) => {
               variant="destructive"
               onClick={() => removeAction.execute({ id: cv.id })}
             >
-              Confirm Removal
+             Confirmer
             </Button>
           </DialogFooter>
         </DialogContent>
