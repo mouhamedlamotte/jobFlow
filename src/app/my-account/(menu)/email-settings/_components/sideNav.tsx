@@ -29,15 +29,12 @@ export const SettingsNav = () => {
   const pathname = usePathname();
   return (
     <nav
-        key={"dashboard-04-chunk-0"}
+        key={"settings-nav"}
       className="grid gap-4 text-sm text-muted-foreground"
-      x-chunk="dashboard-04-chunk-0"
     >
       {Links.map((link) => (
-        <>
-          {
             <Link
-              key={link.href}
+              key={Math.random()}
               href={link.href as "/"}
               className={cn(
                 "lex flex w-full items-center gap-4 rounded-md px-2.5 py-2 text-muted-foreground hover:text-foreground",
@@ -47,8 +44,6 @@ export const SettingsNav = () => {
               <link.icon className="h-5 w-5" />
               {link.name}
             </Link>
-          }
-        </>
       ))}
     </nav>
   );

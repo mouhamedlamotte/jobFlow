@@ -94,7 +94,7 @@ const Header = ({ className }: HeaderProps) => {
             <SheetHeader>
               <SheetTitle className="text-left">Ready.js</SheetTitle>
             </SheetHeader>
-            <nav className="mt-6 flex flex-col space-y-4">
+            <nav key={"mobile-menu"} className="mt-6 flex flex-col space-y-4">
               <div>
                 <h2 className="mb-2 text-sm font-semibold text-muted-foreground">
                   Menu

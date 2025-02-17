@@ -6,6 +6,7 @@ import prisma from "@/prisma";
 import { auth } from "@/server/auth";
 import { encrypt, decrypt } from "@/lib/auth/crypto";
 import nodemailer from 'nodemailer'
+import { revalidatePath } from "next/cache";
 
 // Schema for SMTP settings
 const smtpSettingsSchema = z.object({
@@ -44,7 +45,7 @@ export const saveSmtpSettings = actionClient
         hased_smtp_password: encryptedPassword,
       },
     });
-
+    revalidatePath("/my-account/email-settings/smtp");
     return { success: true };
   });
 
@@ -70,7 +71,7 @@ export const sendSmtpTestEmail = actionClient
       !emailSettings.smtp_email ||
       !emailSettings.hased_smtp_password
     ) {
-      throw new Error("SMTP settings not found");
+      throw new Error("Vous n'avez pas encore configuré votre SMTP.");
     }
 
     // Decrypt the SMTP password
@@ -106,7 +107,7 @@ export const sendSmtpTestEmail = actionClient
 
       return { success: true };
     } catch (error) {
-      throw new Error("Failed to send test email. Please try again.");
+      throw new Error("Une erreur est survenue lors de l'envoi de l'email de test.");
     } finally {
       transporter.close();
     }

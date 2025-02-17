@@ -6,6 +6,7 @@ import prisma from "@/prisma";
 import { auth } from "@/server/auth";
 import { decrypt, encrypt } from "@/lib/auth/crypto";
 import { Resend } from "resend";
+import { revalidatePath } from "next/cache";
 
 // Schema for Resend settings
 const resendSettingsSchema = z.object({
@@ -37,7 +38,7 @@ export const saveResendSettings = actionClient
         hased_resend_api_key: encryptedApiKey,
       },
     });
-
+    revalidatePath("/my-account/email-settings/resend");
     return { success: true };
   });
 
@@ -58,7 +59,7 @@ export const sendResendTestEmail = actionClient
     });
 
     if (!emailSettings || !emailSettings.hased_resend_api_key || !emailSettings.resend_email) {
-      throw new Error("Email settings not found");
+      throw new Error("Vous n'avez pas encore configuré votre Resend.");
     }
 
     const decryptedApiKey = decrypt(emailSettings.hased_resend_api_key);

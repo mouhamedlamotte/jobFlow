@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { saveResendSettings, sendResendTestEmail } from "../_mutations/resend-seetting";
 import { useToast } from "@/app/_hooks/use-toast";
-import { Loader } from "lucide-react";
+import { Edit, Loader } from "lucide-react";
 
 // Form schema
 const formSchema = z.object({
@@ -35,22 +35,24 @@ const formSchema = z.object({
   resendEmail: z.string().email("Invalid email address"),
 });
 
-const ResendForm = () => {
+const ResendForm = ({initialValues} : {initialValues : z.infer<typeof formSchema> | null}) => {
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const { toast } = useToast();
+  const [isEditingApiKey, setIsEditingApiKey] = useState(!initialValues?.resendApiKey)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      resendApiKey: "",
-      resendEmail: "",
-    },
+      resendApiKey: initialValues?.resendApiKey || "",
+      resendEmail: initialValues?.resendEmail || "",
+    }
   });
 
   // Save Resend settings action
   const { action: saveAction } = useHookFormAction(saveResendSettings, zodResolver(formSchema), {
     actionProps: {
       onSuccess: () => {
+        setIsEditingApiKey(false)
         toast({
           description: "Vos paramètres Resend ont bien été sauvegardés.",
         });
@@ -65,25 +67,14 @@ const ResendForm = () => {
     },
   });
 
-  // Send test email action
-  const { action: testEmailAction } = useHookFormAction(sendResendTestEmail, zodResolver(z.object({ testEmail: z.string().email() })), {
-    actionProps: {
-      onSuccess: () => {
-        toast({
-          title: "Test email sent",
-          description: "A test email has been sent to the provided address.",
-        });
-        setIsTestModalOpen(false);
-      },
-      onError: () => {
-        toast({
-          title: "Error",
-          description: "Failed to send test email. Please check your settings and try again.",
-          variant: "destructive",
-        });
-      },
-    },
-  });
+  const toggleApiKeyEdit = () => {
+    setIsEditingApiKey(!isEditingApiKey)
+    if (!isEditingApiKey) {
+      form.setValue("resendApiKey", "")
+    }else {
+      form.setValue("resendApiKey", form.getValues("resendApiKey") ?? initialValues?.resendApiKey ?? "")
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -95,10 +86,31 @@ const ResendForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Resend API Key</FormLabel>
-                <FormControl>
-                  <Input className="py-6  focus-visible:ring-0" type="password" placeholder="*************"  autoComplete="off" {...field} />
-                </FormControl>
-                <FormDescription>Votre API key est stockée de manière sécurisée.</FormDescription>
+                <div className="flex items-center justify-start space-x-2">
+                  <FormControl>
+                    {isEditingApiKey || !initialValues?.resendApiKey ? (
+                      <Input
+                        className="py-6 focus-visible:ring-0"
+                        type="password"
+                        placeholder="Enter your API key"
+                        autoComplete="off"
+                        {...field}
+                      />
+                    ) : (
+                      <div className="py-3 px-4 w-full border rounded-md">
+                        {initialValues?.resendApiKey ? "••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••" : "pas encore de API KEY"}
+                      </div>
+                    )}
+                  </FormControl>
+                  {
+                    initialValues?.resendApiKey && (
+                  <Button className="" type="button" variant="ghost" onClick={toggleApiKeyEdit}>
+                    {isEditingApiKey ? "Cancel" : <Edit />}
+                  </Button>
+                    )
+                  }
+                </div>
+                <FormDescription>Votre API key est stockée de manière sécurisée.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -117,7 +129,10 @@ const ResendForm = () => {
               </FormItem>
             )}
           />
-          <Button variant="secondary" className="w-full" type="submit" disabled={saveAction.status === "executing"}>
+          <Button variant="secondary" className="w-full" type="submit" disabled={saveAction.status === "executing" || (
+            initialValues?.resendApiKey === form.getValues("resendApiKey") &&
+            initialValues?.resendEmail === form.getValues("resendEmail")
+          ) || !form.formState.isValid}>
             {saveAction.status === "executing" ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : "Enregistrer"}
           </Button>
         </form>

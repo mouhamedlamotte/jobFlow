@@ -53,15 +53,15 @@ export const SendTestEmail = () => {
       actionProps: {
         onSuccess: () => {
           toast({
-            title: "Test email sent",
-            description: "A test email has been sent to the provided address.",
+            title: "email envoyé !",
+            description: "Un email de test a été envoyé à l'adresse indiquee.",
           });
           setIsTestModalOpen(false);
         },
-        onError: () => {
+        onError: (error) => {
           toast({
-            title: "Error",
-            description: "Failed to send test email. Please check your settings and try again.",
+            title: "Une erreur est survenue",
+            description: error?.error?.serverError ?? 'Le serveur n\'a pas pu envoyer l\'email de test. Veuillez réessayer.',
             variant: "destructive",
           });
         },
@@ -72,15 +72,14 @@ export const SendTestEmail = () => {
         actionProps: {
           onSuccess: () => {
             toast({
-              title: "Test email sent",
-              description: "A test email has been sent to the provided address.",
+              title: "email envoyé !",
+              description: "Un email de test a été envoyé à l'adresse indiquee.",
             });
             setIsTestModalOpen(false);
           },
           onError: (error) => {
             toast({
               title: "Une erreur est survenue",
-              description: error?.error?.serverError ?? 'Le serveur n\'a pas pu envoyer l\'email de test. Veuillez réessayer.',
               variant: "destructive",
             });
           },

@@ -17,7 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { saveSmtpSettings } from "../_mutations/stmp-setting";
-import { Loader } from "lucide-react";
+import { Edit, Loader } from "lucide-react";
+import { useState } from "react";
 
 // Form schema
 const formSchema = z.object({
@@ -27,43 +28,64 @@ const formSchema = z.object({
   smtpPassword: z.string().min(1, "SMTP password is required"),
 });
 
-const SmtpForm = () => {
+const SmtpForm = ({
+  initialValues,
+}: {
+  initialValues: z.infer<typeof formSchema> | null;
+}) => {
   const { toast } = useToast();
+  const [isEditingPassword, setIsEditingPassword] = useState(
+    !initialValues?.smtpPassword,
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      smtpServer: "",
-      smtpPort: "",
-      smtpEmail: "",
-      smtpPassword: "",
+      ...initialValues,
     },
   });
 
   // Save SMTP settings action
-  const { action: saveAction } = useHookFormAction(saveSmtpSettings, zodResolver(formSchema), {
-    actionProps: {
-      onSuccess: () => {
-        toast({
-          title: "Settings saved",
-          description: "Your SMTP settings have been saved successfully.",
-        });
-      },
-      onError: () => {
-        toast({
-          title: "Error",
-          description: "Failed to save settings. Please try again.",
-          variant: "destructive",
-        });
+  const { action: saveAction } = useHookFormAction(
+    saveSmtpSettings,
+    zodResolver(formSchema),
+    {
+      actionProps: {
+        onSuccess: () => {
+          toast({
+            title: "Settings saved",
+            description: "Your SMTP settings have been saved successfully.",
+          });
+        },
+        onError: () => {
+          toast({
+            title: "Error",
+            description: "Failed to save settings. Please try again.",
+            variant: "destructive",
+          });
+        },
       },
     },
-  });
+  );
 
-
+  const togglePasswordEdit = () => {
+    setIsEditingPassword(!isEditingPassword);
+    if (!isEditingPassword) {
+      form.setValue("smtpPassword", "");
+    } else {
+      form.setValue(
+        "smtpPassword",
+        form.getValues("smtpPassword") ?? initialValues?.smtpPassword ?? "",
+      );
+    }
+  };
   return (
     <div className="space-y-6">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit((values) => saveAction.execute(values))} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit((values) => saveAction.execute(values))}
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="smtpServer"
@@ -97,7 +119,11 @@ const SmtpForm = () => {
               <FormItem>
                 <FormLabel>SMTP Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="noreply@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="noreply@example.com"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -109,15 +135,53 @@ const SmtpForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>SMTP Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Enter your SMTP password" {...field} />
-                </FormControl>
+                <div className="flex items-center justify-start space-x-2">
+                  <FormControl>
+                    {isEditingPassword || !initialValues?.smtpPassword ? (
+                      <Input
+                        type="password"
+                        placeholder="Enter your SMTP password"
+                        {...field}
+                      />
+                    ) : (
+                      <div className="w-full rounded-md border px-4 py-2">
+                        {initialValues?.smtpPassword
+                          ? "••••••••••••••••••••••••"
+                          : "pas encore de mot de passe"}
+                      </div>
+                    )}
+                  </FormControl>
+                  <Button
+                    className=""
+                    type="button"
+                    variant="ghost"
+                    onClick={togglePasswordEdit}
+                  >
+                    {isEditingPassword ? "Cancel" : <Edit />}
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button variant="secondary" className="w-full" type="submit" disabled={saveAction.status === "executing"}>
-            {saveAction.status === "executing" ? <Loader className="h-4 w-4 animate-spin" /> : "Enregistrer"}
+          <Button
+            variant="secondary"
+            className="w-full"
+            type="submit"
+            disabled={
+              saveAction.status === "executing" || // Disable if the action is loading
+              !form.formState.isValid || // Disable if the form is not valid
+              (initialValues?.smtpPassword === form.getValues("smtpPassword") &&
+                initialValues?.smtpEmail === form.getValues("smtpEmail") &&
+                initialValues?.smtpPort === form.getValues("smtpPort") &&
+                initialValues?.smtpServer === form.getValues("smtpServer")) // Disable if all values are the same as initial values
+            }
+          >
+            {saveAction.status === "executing" ? (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Enregistrer"
+            )}
           </Button>
         </form>
       </Form>

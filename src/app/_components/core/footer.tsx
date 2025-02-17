@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="mb-4 md:mb-0">
             <AppLogo />
           </div>
-          <nav className="flex flex-wrap justify-center gap-4 md:justify-end">
+          <nav key={"footer-nav"} className="flex flex-wrap justify-center gap-4 md:justify-end">
             <a
               href={`mailto:${SUPPORT_EMAIL}`}
               className="text-sm font-medium hover:underline"

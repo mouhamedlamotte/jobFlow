@@ -63,12 +63,12 @@ export const mainNavigationItems : NavigationItem<string>[] = [
   },
   {
     title: "Paramètres SMTP / Envoi",
-    url: "/my-account/email-settings",
+    url: "/my-account/email-settings/resend",
     icon: Mailbox,
     isActive: true,
     breadcrumbs: [
       { label: "Dashboard", link: "/my-account" },
-      { label: "Paramètres SMTP / Envoi", link: "/my-account/email-settings" },
+      { label: "Paramètres SMTP / Envoi", link: "/my-account/email-settings/resend" },
     ],
   },
   {
