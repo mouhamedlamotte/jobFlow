@@ -13,7 +13,7 @@ type Props = Omit<ComponentProps<typeof Link>, "href"> & {
 export const AppLogo : React.FC<Props> = ({ className, iconClassName, ...props }: Props) => {
   return (
     <Link
-      href="/"
+      href="/my-account"
       className={cn("flex items-center text-2xl lg:text-3xl", className)}
       {...props}
     >

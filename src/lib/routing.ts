@@ -7,4 +7,4 @@ export const publicRoutes = [
 ];
 
 export const appRoutes = [...publicRoutes];
-export const defaultRedirect = "/";
+export const defaultRedirect = "/my-account";

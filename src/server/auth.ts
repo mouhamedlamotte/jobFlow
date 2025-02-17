@@ -7,7 +7,7 @@ import "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authConfig = {
-  pages: { signIn: "/" },
+  pages:  { signIn: "/" },
   providers: [
   GoogleProvider({
     clientId: process.env.GOOGLE_ID,
@@ -74,6 +74,9 @@ export const authConfig = {
 
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl + '/my-account';
+    }
   },
 } satisfies NextAuthConfig;
 

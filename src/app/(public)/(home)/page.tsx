@@ -15,17 +15,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/app/_components/ui/tooltip";
-import { rootUrl } from "@/lib/routing";
-import { PageProps } from "@/types/page-props";
-import { Github } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const callbackUrl = "http://localhost:3000/api/auth/callback/google";
   const { status } = useSession();
-  const router = useRouter();
 
   if (status === "authenticated") {
     return (
