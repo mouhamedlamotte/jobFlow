@@ -73,12 +73,16 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-4">
           <Tooltip>
           <TooltipTrigger className="w-full">
-            <Button variant="outline" disabled className="w-full">
+            <Button variant="outline" className="w-full"
+              onClick={() => {
+                signIn("github", { callbackUrl : "http://localhost:3000/api/auth/callback/github" });
+              }}
+            >
               <GithubIcon/>
               GitHub
             </Button>
             </TooltipTrigger>
-            <TooltipContent>Pas disponible pour le moment</TooltipContent>
+            <TooltipContent>Github</TooltipContent>
           </Tooltip>
             <Button
               variant="outline"

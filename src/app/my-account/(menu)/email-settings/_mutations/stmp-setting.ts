@@ -107,7 +107,7 @@ export const sendSmtpTestEmail = actionClient
 
       return { success: true };
     } catch (error) {
-      throw new Error("Une erreur est survenue lors de l'envoi de l'email de test.");
+      throw new Error("Votre config smtp n'a pas pu envoyer l'email de test. Veuillez verifier vos paramètres.");
     } finally {
       transporter.close();
     }

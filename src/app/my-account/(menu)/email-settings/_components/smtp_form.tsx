@@ -5,13 +5,13 @@ import { Input } from "@/app/_components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/app/_components/ui/form";
 
-import { useToast } from "@/app/_components/ui/use-toast";
 import { useHookFormAction } from "@next-safe-action/adapter-react-hook-form/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,13 +19,14 @@ import { z } from "zod";
 import { saveSmtpSettings } from "../_mutations/stmp-setting";
 import { Edit, Loader } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/app/_hooks/use-toast";
 
 // Form schema
 const formSchema = z.object({
-  smtpServer: z.string().min(1, "SMTP server is required"),
-  smtpPort: z.string().min(1, "SMTP port is required"),
-  smtpEmail: z.string().email("Invalid email address"),
-  smtpPassword: z.string().min(1, "SMTP password is required"),
+  smtpServer: z.string().min(1, "SMTP server est requis"),
+  smtpPort: z.string().min(1, "SMTP port est requis"),
+  smtpEmail: z.string().email("Invalid email"),
+  smtpPassword: z.string().min(1, "le mot de passe est requis"),
 });
 
 const SmtpForm = ({
@@ -52,15 +53,15 @@ const SmtpForm = ({
     {
       actionProps: {
         onSuccess: () => {
+          setIsEditingPassword(false);
           toast({
-            title: "Settings saved",
-            description: "Your SMTP settings have been saved successfully.",
+            description: "Vos paramètres SMTP ont bien été sauvegardés.",
           });
         },
         onError: () => {
           toast({
-            title: "Error",
-            description: "Failed to save settings. Please try again.",
+            title: "Une erreur est survenue",
+            description: "Nous n'avons pas pu sauvegarder vos paramètres SMTP. Veuillez réessayer.",
             variant: "destructive",
           });
         },
@@ -134,15 +135,16 @@ const SmtpForm = ({
             name="smtpPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>SMTP Password</FormLabel>
+                <FormLabel>Mot de passe SMTP</FormLabel>
                 <div className="flex items-center justify-start space-x-2">
                   <FormControl>
                     {isEditingPassword || !initialValues?.smtpPassword ? (
                       <Input
                         type="password"
-                        placeholder="Enter your SMTP password"
+                        placeholder="••••••••••••••••••••••••"
                         {...field}
                       />
+
                     ) : (
                       <div className="w-full rounded-md border px-4 py-2">
                         {initialValues?.smtpPassword
@@ -164,6 +166,9 @@ const SmtpForm = ({
                     )
                   }
                 </div>
+                <FormDescription>
+                  Votre mot de passe est stocké de maniere securisée.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

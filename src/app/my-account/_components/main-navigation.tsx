@@ -32,14 +32,14 @@ export const MainNavigation = () => {
         {mainNavigationItems.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem >
-              <SidebarMenuButton asChild tooltip={item.title} size="lg" className={cn('text-lg data-[active=true]:bg-primary/60', item.disabled && 'cursor-not-allowed text-muted-foreground hover:text-muted-foreground hover:bg-transparent')}
-                isActive={pathname === item.url}
-              >
+                <SidebarMenuButton asChild tooltip={item.title} size="lg" className={cn('text-lg data-[active=true]:bg-primary/60', item.disabled && 'cursor-not-allowed text-muted-foreground hover:text-muted-foreground hover:bg-transparent')}
+                isActive={pathname === item.url || (item.url === '/my-account/email-settings/resend' && pathname === '/my-account/email-settings/smtp')}
+                >
                 <Link href={item.disabled ? '#' : item.url} className="text-lg" >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
               {item.items?.length ? (
                 <>
                   <CollapsibleTrigger asChild>

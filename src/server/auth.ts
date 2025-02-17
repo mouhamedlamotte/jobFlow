@@ -5,14 +5,21 @@ import NextAuth from "next-auth";
 import "next-auth/jwt";
 
 import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 
 export const authConfig = {
-  pages:  { signIn: "/" },
+  pages:  { signIn: "/" , error: "/", newUser: "/my-account", signOut: "/"},
   providers: [
   GoogleProvider({
     clientId: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
     checks: ["pkce"],
+    allowDangerousEmailAccountLinking: true,
+  }),
+  GitHubProvider({
+    clientId: process.env.GITHUB_ID,
+    clientSecret: process.env.GITHUB_SECRET,
+    allowDangerousEmailAccountLinking: true,
   }),
   ],
 

@@ -42,15 +42,14 @@ const UploadCVButton = ({disabled }: { disabled: boolean}) => {
           setCVs([...cvs, data.data.cv])
         }
         toast({
-          title: "Success!",
-          description: "CV added successfully.",
+          description: "CV ajouté avec succès.",
         })
       },
       onError: (error) => {
         toast({
-          title: "Error!",
+          title: "Une erreur est survenue!",
           variant: "destructive",
-          description: "Failed to add CV. Please try again.",
+          description: "Votre CV n'a pas pu être ajouté. Veuillez réessayer.",
         })
       },
     },
