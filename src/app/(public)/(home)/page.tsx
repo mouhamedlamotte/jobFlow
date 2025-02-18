@@ -19,8 +19,9 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function HomePage() {
-  const callbackUrl = "http://localhost:3000/api/auth/callback/google";
   const { status } = useSession();
+  const githubCallbackUrl = process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL ?? "http://localhost:3000/api/auth/callback/github";
+  const googleCallbackUrl = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL ?? "http://localhost:3000/api/auth/callback/google";
 
   if (status === "authenticated") {
     return (
@@ -75,7 +76,7 @@ export default function HomePage() {
           <TooltipTrigger className="w-full">
             <Button variant="outline" className="w-full"
               onClick={() => {
-                signIn("github", { callbackUrl : "http://localhost:3000/api/auth/callback/github" });
+                signIn("github", { callbackUrl : githubCallbackUrl });
               }}
             >
               <GithubIcon/>
@@ -87,7 +88,7 @@ export default function HomePage() {
             <Button
               variant="outline"
               onClick={() => {
-                signIn("google", { callbackUrl });
+                signIn("google", { callbackUrl : googleCallbackUrl });
               }}
             >
               <GoogleIcon />
